@@ -1,4 +1,4 @@
-cp .env.app .env
+cp .env.example .env
 
 # Start services
 docker compose up -d
