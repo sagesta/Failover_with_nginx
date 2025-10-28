@@ -1,5 +1,5 @@
 upstream app_pool {
-    server app_blue:8081 max_fails=2 fail_timeout=3s;
+    server app_blue:8081 max_fails=2 fail_timeout=1s;
     server app_green:8082 backup;
 }
 
