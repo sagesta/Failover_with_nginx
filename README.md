@@ -1,6 +1,7 @@
+cp .env.app .env
+
 # Start services
 docker compose up -d
-
 # Verify Blue is active
 curl http://localhost:8080/version
 # Should return X-App-Pool: blue
