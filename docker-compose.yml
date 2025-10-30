@@ -1,15 +1,19 @@
 services:
   nginx:
-    image: nginx:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx   # Use your custom Dockerfile below
     ports:
       - "${PORT:-8080}:80"
     volumes:
-      - ./nginx/nginx.conf.template:/etc/nginx/templates/default.conf.template
+      - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf    # Use as main config file
+      - nginx_logs:/var/log/nginx                            # Shared log volume
     environment:
       - ACTIVE_POOL=${ACTIVE_POOL}
     depends_on:
       - app_blue
       - app_green
+    restart: unless-stopped
 
   app_blue:
     image: ${BLUE_IMAGE}
@@ -19,6 +23,7 @@ services:
       - PORT=8081
     ports:
       - "8081:8081"
+    restart: unless-stopped
 
   app_green:
     image: ${GREEN_IMAGE}
@@ -28,3 +33,23 @@ services:
       - PORT=8082
     ports:
       - "8082:8082"
+    restart: unless-stopped
+
+  alert_watcher:
+    build:
+      context: .
+      dockerfile: Dockerfile.watcher
+    volumes:
+      - nginx_logs:/var/log/nginx:ro
+    environment:
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - ERROR_RATE_THRESHOLD=${ERROR_RATE_THRESHOLD:-2}
+      - WINDOW_SIZE=${WINDOW_SIZE:-200}
+      - ALERT_COOLDOWN_SEC=${ALERT_COOLDOWN_SEC:-300}
+    depends_on:
+      - nginx
+    restart: on-failure
+
+volumes:
+  nginx_logs:
+    driver: local

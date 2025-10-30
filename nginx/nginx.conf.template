@@ -1,21 +1,59 @@
+<<<<<<< HEAD
 upstream app_pool {
     server app_blue:8081 max_fails=2 fail_timeout=1s;
     server app_green:8082 backup;
+=======
+events {
+    worker_connections 1024;
+>>>>>>> 9f5f473 (added script for monitoring and nginx build to overwrite default log storage location)
 }
 
-server {
-    listen 80;
+http {
+    log_format pooled_format escape=json
+        '{'
+        '"timestamp":"$time_iso8601",'
+        '"pool":"$upstream_http_x_app_pool",'
+        '"release":"$upstream_http_x_release_id",'
+        '"upstream_status":"$upstream_status",'
+        '"upstream_addr":"$upstream_addr",'
+        '"request_time":"$request_time",'
+        '"upstream_response_time":"$upstream_response_time",'
+        '"status":"$status",'
+        '"method":"$request_method",'
+        '"path":"$request_uri",'
+        '"remote_addr":"$remote_addr"'
+        '}';
 
-    location / {
-        proxy_pass http://app_pool;
-        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
-        proxy_next_upstream_tries 2;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_pass_header X-App-Pool;
-        proxy_pass_header X-Release-Id;
+    upstream app_pool {
+        server app_blue:8081 max_fails=2 fail_timeout=2s;
+        server app_green:8082 backup;
     }
 
-    location /healthz {
-        proxy_pass http://app_pool/healthz;
+    server {
+        listen 80;
+
+        access_log /var/log/nginx/access.log pooled_format;
+
+        location / {
+            proxy_pass http://app_pool;
+            proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+            proxy_next_upstream_tries 2;
+            proxy_connect_timeout 2s;
+            proxy_send_timeout 2s;
+            proxy_read_timeout 5s;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+
+            proxy_pass_header X-App-Pool;
+            proxy_pass_header X-Release-Id;
+        }
+
+        location /healthz {
+            proxy_pass http://app_pool/healthz;
+            access_log off;
+        }
     }
 }
