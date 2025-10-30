@@ -49,7 +49,6 @@ cd failover_with_nginx monitoring
 # Copy example env file
 cp .env.example .env
 
-<<<<<<< HEAD
 # Start services
 docker compose up -d
 # Verify Blue is active
@@ -155,6 +154,7 @@ done
 # Expected: Failover back to BLUE
 ```
 
+
 ### Test 2: High Error Rate Alert
 
 ```bash
@@ -171,6 +171,8 @@ done
 
 # 4. Stop chaos
 curl -X POST http://localhost:8081/chaos/stop
+
+
 ```
 
 ---
@@ -182,6 +184,7 @@ curl -X POST http://localhost:8081/chaos/stop
 ```bash
 # View raw logs
 docker compose exec nginx tail -f /var/log/nginx/access.log
+
 
 # Pretty-print with jq
 docker compose exec nginx tail -f /var/log/nginx/access.log | jq
@@ -219,6 +222,7 @@ docker compose logs alert_watcher --tail=50
 ```bash
 # Blue app logs
 docker compose logs app_blue --tail=50
+
 
 # Green app logs
 docker compose logs app_green --tail=50
@@ -482,6 +486,3 @@ For issues:
 - Check logs: `docker compose logs`
 - Review runbook: `runbook.md`
 - Verify configuration: `docker compose config`
-
-
->>>>>>> 9f5f473 (added script for monitoring and nginx build to overwrite default log storage location)
