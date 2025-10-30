@@ -141,9 +141,9 @@ done
 
 # 4. Check Slack for failover alert
 # Expected: "🔄 Pool Failover: BLUE → GREEN"
-
+```
 <img width="895" height="348" alt="Screenshot 2025-10-30 224504" src="https://github.com/user-attachments/assets/d0abc758-698f-4914-b7d0-b4460e7ca50c" />
-
+```
 
 # 5. Stop chaos
 curl -X POST http://localhost:8081/chaos/stop
