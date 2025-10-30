@@ -141,6 +141,7 @@ done
 
 # 4. Check Slack for failover alert
 # Expected: "🔄 Pool Failover: BLUE → GREEN"
+<img width="895" height="348" alt="Screenshot 2025-10-30 224504" src="https://github.com/user-attachments/assets/d0abc758-698f-4914-b7d0-b4460e7ca50c" />
 
 # 5. Stop chaos
 curl -X POST http://localhost:8081/chaos/stop
@@ -171,6 +172,7 @@ done
 
 # 4. Stop chaos
 curl -X POST http://localhost:8081/chaos/stop
+<img width="1690" height="431" alt="Screenshot 2025-10-30 224844" src="https://github.com/user-attachments/assets/5792c48c-4c40-452c-8251-7a809c7b68fe" />
 
 
 ```
@@ -184,6 +186,7 @@ curl -X POST http://localhost:8081/chaos/stop
 ```bash
 # View raw logs
 docker compose exec nginx tail -f /var/log/nginx/access.log
+<img width="1005" height="780" alt="Screenshot 2025-10-30 225124" src="https://github.com/user-attachments/assets/920ec0c4-df03-4c34-9a2c-afb3415e8d03" />
 
 
 # Pretty-print with jq
@@ -222,10 +225,12 @@ docker compose logs alert_watcher --tail=50
 ```bash
 # Blue app logs
 docker compose logs app_blue --tail=50
+<img width="1003" height="843" alt="Screenshot 2025-10-30 225850" src="https://github.com/user-attachments/assets/ac4da377-60ab-4e48-955a-f7b117fcf6b1" />
 
 
 # Green app logs
 docker compose logs app_green --tail=50
+<img width="1000" height="654" alt="Screenshot 2025-10-30 225917" src="https://github.com/user-attachments/assets/8171287e-dced-4da7-9bfc-4688266a313a" />
 
 # Follow both
 docker compose logs -f app_blue app_green
