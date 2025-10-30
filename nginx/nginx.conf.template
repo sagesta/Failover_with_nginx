@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-upstream app_pool {
-    server app_blue:8081 max_fails=2 fail_timeout=1s;
-    server app_green:8082 backup;
-=======
 events {
     worker_connections 1024;
->>>>>>> 9f5f473 (added script for monitoring and nginx build to overwrite default log storage location)
 }
 
 http {
