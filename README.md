@@ -475,11 +475,6 @@ A: Edit `ACTIVE_POOL` in `.env` and run `docker compose up -d nginx`.
 A: Yes, just ensure ports 8080, 8081, 8082 are accessible via NSG.
 
 ---
-## License
-
-This is a learning project for DevOps training.
-
----
 
 ## Support
 
